@@ -81,8 +81,9 @@ graphPanel: Panel donde se mostrará el gráfico.
 chartType: Tipo de gráfico predeterminado (pastel).
 datosSeleccionados: Mapa que almacenará los datos seleccionados por el usuario.
 Constructor: Configura la interfaz gráfica y añade un botón para seleccionar archivos.
+
 3. Métodos Principales
-a. getChartType y setChartType
+
 java
 public String getChartType() { return chartType; }
 public void setChartType(String chartType) {
@@ -91,7 +92,7 @@ public void setChartType(String chartType) {
 }
 
 Métodos para obtener y establecer el tipo de gráfico.
-b. updateGraph
+
 java
 private void updateGraph() {
     graphPanel.removeAll();
@@ -102,6 +103,7 @@ private void updateGraph() {
 }
 
 Este método actualiza el gráfico en función del tipo seleccionado y los datos disponibles.
+
 4. Clase Interna Grafica
 java
 private static class Grafica extends JPanel {
@@ -122,8 +124,9 @@ private static class Grafica extends JPanel {
     }
 
 Constructor: Crea un gráfico basado en el tipo especificado (pastel o barras) y añade el gráfico al panel.
+
 5. Métodos Estáticos para Manejo de Archivos
-a. readFile
+
 java
 private static Map<String, Double> readFile(String nameFile) {
     Map<String, Double> divisions = new HashMap<>();
@@ -143,7 +146,7 @@ private static Map<String, Double> readFile(String nameFile) {
 }
 
 Este método lee un archivo línea por línea y extrae pares clave-valor que se almacenan en un mapa.
-b. datosGenerales
+
 java
 public static Map<String, Double> datosGenerales(Map<String, Double> datos) {
     DefaultTableModel tableModel = new DefaultTableModel(new Object[]{"Categoría", "Valor"}, 0);
