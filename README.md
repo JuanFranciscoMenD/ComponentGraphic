@@ -1,7 +1,7 @@
 # JGrafica: Visualización de Datos en Java
 
 ## Descripción
-**JGrafica** es una aplicación de escritorio en Java que permite a los usuarios visualizar datos numéricos a través de gráficos interactivos utilizando la biblioteca JFreeChart. La aplicación permite seleccionar un archivo que contenga datos, elegir el tipo de gráfico (pastel o barras), y visualizar los datos seleccionados.
+**JGrafica** es una aplicación de escritorio en Java que permite a los usuarios visualizar datos numéricos a través de gráficos interactivos utilizando la biblioteca JFreeChart. La aplicación permite seleccionar un archivo que contenga datos, y visualizar los datos seleccionados.
 
 ## Estructura del Código
 
