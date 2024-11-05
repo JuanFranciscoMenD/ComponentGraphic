@@ -1,10 +1,15 @@
-JGrafica: Visualización de Datos en Java
-Descripción
-El proyecto JGrafica es una aplicación de escritorio en Java que permite a los usuarios visualizar datos numéricos a través de gráficos interactivos utilizando la biblioteca JFreeChart. La aplicación permite seleccionar un archivo que contenga datos, elegir el tipo de gráfico (pastel o barras) y visualizar los datos seleccionados.
-Estructura del Código
-1. Importaciones
+# JGrafica: Visualización de Datos en Java
+
+## Descripción
+**JGrafica** es una aplicación de escritorio en Java que permite a los usuarios visualizar datos numéricos a través de gráficos interactivos utilizando la biblioteca JFreeChart. La aplicación permite seleccionar un archivo que contenga datos, elegir el tipo de gráfico (pastel o barras), y visualizar los datos seleccionados.
+
+## Estructura del Código
+
+### 1. Importaciones
 El código comienza con las importaciones necesarias para utilizar las bibliotecas de gráficos y la interfaz gráfica:
-java
+
+```java
+
 package grafica;
 
 import org.jfree.chart.ChartFactory;
@@ -24,33 +29,33 @@ import java.util.HashMap;
 import java.util.Map;
 import javax.swing.table.DefaultTableModel;
 
-2. Clase Principal JGrafica
-La clase principal JGrafica extiende JPanel, lo que permite que esta clase sea un componente visual en la interfaz gráfica.
+```
+
+2. Clase Principal: JGrafica
+
+La clase principal JGrafica extiende JPanel, permitiendo que esta clase sea un componente visual en la interfaz gráfica.
+
 Variables
 graphPanel: Panel donde se mostrará el gráfico.
 chartType: Tipo de gráfico predeterminado (pastel).
 datosSeleccionados: Mapa que almacena los datos seleccionados por el usuario.
+
 Constructor
 El constructor configura la interfaz gráfica y añade un botón para seleccionar archivos:
-java
+
+```java
+
 public JGrafica() {
     setLayout(new BorderLayout());
-    // Panel superior para el botón de selección de archivo
-    JPanel controlPanel = new JPanel();
-    controlPanel.setLayout(new FlowLayout());
+    JPanel controlPanel = new JPanel(new FlowLayout());
     JButton button = new JButton();
     button.setIcon(new ImageIcon(getClass().getResource("/grafica/icon.png")));
     controlPanel.add(button);
     
-    // Panel central donde se añadirá el gráfico
-    graphPanel = new JPanel();
-    graphPanel.setLayout(new BorderLayout());
-    
-    // Añadir paneles al contenedor principal
+    graphPanel = new JPanel(new BorderLayout());
     add(controlPanel, BorderLayout.NORTH);
     add(graphPanel, BorderLayout.CENTER);
     
-    // Acción del botón para abrir un archivo
     button.addActionListener(new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -70,19 +75,24 @@ public JGrafica() {
     });
 }
 
+```
+
 3. Métodos Principales
-a. getChartType y setChartType
+getChartType y setChartType
 Estos métodos permiten obtener y establecer el tipo de gráfico:
-java
+
+```java
+
 public String getChartType() { return chartType; }
 public void setChartType(String chartType) {
     this.chartType = chartType;
     updateGraph(); // Actualizar el gráfico cuando cambie el tipo
 }
-
-b. updateGraph
+,,,
+updateGraph
 Este método actualiza el gráfico en función del tipo seleccionado y los datos disponibles:
-java
+
+
 private void updateGraph() {
     graphPanel.removeAll();
     Grafica grafica = new Grafica(chartType, "Gráfico", datosSeleccionados);
@@ -90,10 +100,13 @@ private void updateGraph() {
     graphPanel.revalidate();
     graphPanel.repaint();
 }
+```
 
-4. Clase Interna Grafica
+4. Clase Interna: Grafica
+
 La clase interna Grafica es responsable de crear y mostrar los gráficos:
-java
+
+```java
 private static class Grafica extends JPanel {
     public Grafica(String chartType, String title, Map<String, Double> data) {
         JFreeChart chart = null;
@@ -110,11 +123,15 @@ private static class Grafica extends JPanel {
         chartPanel.setPreferredSize(new Dimension(470, 270));
         this.add(chartPanel);
     }
+}
+```
 
 5. Métodos Estáticos para Manejo de Archivos
-a. readFile
+
+readFile
 Este método lee un archivo línea por línea y extrae pares clave-valor que se almacenan en un mapa:
-java
+
+```java
 private static Map<String, Double> readFile(String nameFile) {
     Map<String, Double> divisions = new HashMap<>();
     String line;
@@ -131,14 +148,15 @@ private static Map<String, Double> readFile(String nameFile) {
     }
     return divisions;
 }
+```
 
-b. datosGenerales
+datosGenerales
 Este método muestra una ventana emergente con una tabla que permite al usuario seleccionar qué datos graficar:
-java
+
+```java
 public static Map<String, Double> datosGenerales(Map<String, Double> datos) {
     DefaultTableModel tableModel = new DefaultTableModel(new Object[]{"Categoría", "Valor"}, 0);
     JTable table = new JTable(tableModel);
-    
     datos.forEach((categoria, valor) -> tableModel.addRow(new Object[]{categoria, valor}));
     
     JScrollPane scrollPane = new JScrollPane(table);
@@ -150,41 +168,41 @@ public static Map<String, Double> datosGenerales(Map<String, Double> datos) {
     JButton acceptButton = new JButton("Aceptar");
     JButton cancelButton = new JButton("Cancelar");
     
-    JPanel buttonPanel = new JPanel();
-    buttonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+    JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
     buttonPanel.add(acceptButton);
     buttonPanel.add(cancelButton);
-
+    
     dialog.setLayout(new BorderLayout());
     dialog.add(scrollPane, BorderLayout.CENTER);
     dialog.add(buttonPanel, BorderLayout.SOUTH);
-
+    
     final Map<String, Double>[] selectedData = new Map[]{null};
-
+    
     acceptButton.addActionListener((ActionEvent e) -> {
         int[] selectedRows = table.getSelectedRows();
         if (selectedRows.length == 0) {
             JOptionPane.showMessageDialog(dialog, "No hay filas seleccionadas.", "Advertencia", JOptionPane.WARNING_MESSAGE);
             return;
         }
-        
         Map<String, Double> selectedMap = new HashMap<>();
         for (int row : selectedRows) {
             String category = (String) tableModel.getValueAt(row, 0);
             Double value = (Double) tableModel.getValueAt(row, 1);
             selectedMap.put(category, value);
         }
-        
         selectedData[0] = selectedMap;
-        dialog.dispose(); // Cerrar el diálogo
+        dialog.dispose();
     });
-
+    
     cancelButton.addActionListener((ActionEvent e) -> {
         JOptionPane.showMessageDialog(dialog, "Proceso Cancelado", "Información", JOptionPane.INFORMATION_MESSAGE);
         dialog.dispose();
     });
 
+    dialog.pack();
+    dialog.setLocationRelativeTo(null);
     dialog.setVisible(true);
     
-    return selectedData[0]; // Devuelve el mapa de datos seleccionados
+    return selectedData[0];
 }
+```
