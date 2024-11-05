@@ -1,6 +1,9 @@
+JGrafica: Visualización de Datos en Java
+Descripción
+El proyecto JGrafica es una aplicación de escritorio en Java que permite a los usuarios visualizar datos numéricos a través de gráficos interactivos utilizando la biblioteca JFreeChart. La aplicación permite seleccionar un archivo que contenga datos, elegir el tipo de gráfico (pastel o barras) y visualizar los datos seleccionados.
 Estructura del Código
 1. Importaciones
-El código comienza con importaciones de bibliotecas necesarias:
+El código comienza con las importaciones necesarias para utilizar las bibliotecas de gráficos y la interfaz gráfica:
 java
 package grafica;
 
@@ -21,69 +24,55 @@ import java.util.HashMap;
 import java.util.Map;
 import javax.swing.table.DefaultTableModel;
 
-package grafica;: Define el paquete al que pertenece la clase.
-Importaciones de JFreeChart: Estas son necesarias para crear gráficos de pastel y de barras.
-Importaciones de Swing: Se utilizan para crear la interfaz gráfica de usuario (GUI).
-Importaciones de IO: Para manejar la lectura de archivos.
-
 2. Clase Principal JGrafica
-java
-public class JGrafica extends JPanel {
-    private JPanel graphPanel;
-    private String chartType = "PASTEL"; // Tipo de gráfica predeterminado
-    Map<String, Double> datosSeleccionados;
-
-    public JGrafica() {
-        setLayout(new BorderLayout());
-        // Panel superior para el botón de selección de archivo
-        JPanel controlPanel = new JPanel();
-        controlPanel.setLayout(new FlowLayout());
-        JButton button = new JButton();
-        button.setIcon(new ImageIcon(getClass().getResource("/grafica/icon.png")));
-        button.setSize(new Dimension(100, 100));
-        controlPanel.add(button);
-        
-        // Panel central donde se añadirá el gráfico después de seleccionar los datos
-        graphPanel = new JPanel();
-        graphPanel.setLayout(new BorderLayout());
-
-        // Añadir paneles al contenedor principal
-        add(controlPanel, BorderLayout.NORTH);
-        add(graphPanel, BorderLayout.CENTER);
-
-        // Acción del botón para abrir un archivo y mostrar la vista previa de datos
-        button.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                JFileChooser fileChooser = new JFileChooser();
-                int returnValue = fileChooser.showOpenDialog(JGrafica.this);
-                if (returnValue == JFileChooser.APPROVE_OPTION) {
-                    File selectedFile = fileChooser.getSelectedFile();
-                    // Limpia cualquier gráfico anterior del panel
-                    graphPanel.removeAll();
-                    // Llama al método para abrir el diálogo de selección de datos y obtener los seleccionados
-                    datosSeleccionados = Grafica.datosGenerales(Grafica.readFile(selectedFile.getAbsolutePath()));
-                    // Si hay datos seleccionados, muestra la gráfica
-                    if (datosSeleccionados != null) {
-                        updateGraph();
-                    }
-                } else {
-                    // Mensaje si no se seleccionó ningún archivo
-                    JOptionPane.showMessageDialog(JGrafica.this, "No se seleccionó ningún archivo.", "Información", JOptionPane.INFORMATION_MESSAGE);
-                }
-            }
-        });
-    }
-
-JGrafica: Extiende JPanel, lo que permite que esta clase sea un componente visual.
-Variables:
+La clase principal JGrafica extiende JPanel, lo que permite que esta clase sea un componente visual en la interfaz gráfica.
+Variables
 graphPanel: Panel donde se mostrará el gráfico.
 chartType: Tipo de gráfico predeterminado (pastel).
-datosSeleccionados: Mapa que almacenará los datos seleccionados por el usuario.
-Constructor: Configura la interfaz gráfica y añade un botón para seleccionar archivos.
+datosSeleccionados: Mapa que almacena los datos seleccionados por el usuario.
+Constructor
+El constructor configura la interfaz gráfica y añade un botón para seleccionar archivos:
+java
+public JGrafica() {
+    setLayout(new BorderLayout());
+    // Panel superior para el botón de selección de archivo
+    JPanel controlPanel = new JPanel();
+    controlPanel.setLayout(new FlowLayout());
+    JButton button = new JButton();
+    button.setIcon(new ImageIcon(getClass().getResource("/grafica/icon.png")));
+    controlPanel.add(button);
+    
+    // Panel central donde se añadirá el gráfico
+    graphPanel = new JPanel();
+    graphPanel.setLayout(new BorderLayout());
+    
+    // Añadir paneles al contenedor principal
+    add(controlPanel, BorderLayout.NORTH);
+    add(graphPanel, BorderLayout.CENTER);
+    
+    // Acción del botón para abrir un archivo
+    button.addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            JFileChooser fileChooser = new JFileChooser();
+            int returnValue = fileChooser.showOpenDialog(JGrafica.this);
+            if (returnValue == JFileChooser.APPROVE_OPTION) {
+                File selectedFile = fileChooser.getSelectedFile();
+                graphPanel.removeAll();
+                datosSeleccionados = Grafica.datosGenerales(Grafica.readFile(selectedFile.getAbsolutePath()));
+                if (datosSeleccionados != null) {
+                    updateGraph();
+                }
+            } else {
+                JOptionPane.showMessageDialog(JGrafica.this, "No se seleccionó ningún archivo.", "Información", JOptionPane.INFORMATION_MESSAGE);
+            }
+        }
+    });
+}
 
 3. Métodos Principales
-
+a. getChartType y setChartType
+Estos métodos permiten obtener y establecer el tipo de gráfico:
 java
 public String getChartType() { return chartType; }
 public void setChartType(String chartType) {
@@ -91,8 +80,8 @@ public void setChartType(String chartType) {
     updateGraph(); // Actualizar el gráfico cuando cambie el tipo
 }
 
-Métodos para obtener y establecer el tipo de gráfico.
-
+b. updateGraph
+Este método actualiza el gráfico en función del tipo seleccionado y los datos disponibles:
 java
 private void updateGraph() {
     graphPanel.removeAll();
@@ -102,9 +91,8 @@ private void updateGraph() {
     graphPanel.repaint();
 }
 
-Este método actualiza el gráfico en función del tipo seleccionado y los datos disponibles.
-
 4. Clase Interna Grafica
+La clase interna Grafica es responsable de crear y mostrar los gráficos:
 java
 private static class Grafica extends JPanel {
     public Grafica(String chartType, String title, Map<String, Double> data) {
@@ -123,10 +111,9 @@ private static class Grafica extends JPanel {
         this.add(chartPanel);
     }
 
-Constructor: Crea un gráfico basado en el tipo especificado (pastel o barras) y añade el gráfico al panel.
-
 5. Métodos Estáticos para Manejo de Archivos
-
+a. readFile
+Este método lee un archivo línea por línea y extrae pares clave-valor que se almacenan en un mapa:
 java
 private static Map<String, Double> readFile(String nameFile) {
     Map<String, Double> divisions = new HashMap<>();
@@ -145,8 +132,8 @@ private static Map<String, Double> readFile(String nameFile) {
     return divisions;
 }
 
-Este método lee un archivo línea por línea y extrae pares clave-valor que se almacenan en un mapa.
-
+b. datosGenerales
+Este método muestra una ventana emergente con una tabla que permite al usuario seleccionar qué datos graficar:
 java
 public static Map<String, Double> datosGenerales(Map<String, Double> datos) {
     DefaultTableModel tableModel = new DefaultTableModel(new Object[]{"Categoría", "Valor"}, 0);
@@ -159,7 +146,6 @@ public static Map<String, Double> datosGenerales(Map<String, Double> datos) {
     JDialog dialog = new JDialog();
     dialog.setTitle("Vista Previa de Datos");
     dialog.setModal(true);
-    dialog.setSize(500, 400);
     
     JButton acceptButton = new JButton("Aceptar");
     JButton cancelButton = new JButton("Cancelar");
@@ -202,5 +188,3 @@ public static Map<String, Double> datosGenerales(Map<String, Double> datos) {
     
     return selectedData[0]; // Devuelve el mapa de datos seleccionados
 }
-
-Este método muestra una ventana emergente con una tabla que permite al usuario seleccionar qué datos graficar.
